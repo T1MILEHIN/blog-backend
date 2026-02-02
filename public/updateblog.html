@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edit Blog Post</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+  <style>
+    .spinner-border-sm {
+      width: 1rem;
+      height: 1rem;
+    }
+
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.9);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    .loading-overlay.active {
+      display: flex;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <div class="container mt-5 mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2>Edit Blog Post</h2>
+      <button class="btn btn-secondary" onclick="goBack()">Cancel</button>
+    </div>
+
+    <div id="errorAlert" class="alert alert-danger d-none" role="alert"></div>
+
+    <form id="editPostForm">
+      <!-- Title -->
+      <div class="mb-3">
+        <label class="form-label">Title <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" id="title" maxlength="200" required />
+        <div class="form-text">Maximum 200 characters</div>
+      </div>
+
+      <!-- Content -->
+      <div class="mb-3">
+        <label class="form-label">Content <span class="text-danger">*</span></label>
+        <textarea class="form-control" id="content" rows="10" required></textarea>
+      </div>
+
+      <!-- Tags -->
+      <div class="mb-3">
+        <label class="form-label">Tags</label>
+        <input type="text" class="form-control" id="tags" placeholder="travel, technology, lifestyle" />
+        <div class="form-text">Separate tags with commas</div>
+      </div>
+
+      <!-- Categories -->
+      <div class="mb-3">
+        <label class="form-label">Categories</label>
+        <select multiple class="form-select" id="categories" size="5">
+          <!-- Will be populated dynamically -->
+        </select>
+        <div class="form-text">Hold Ctrl/Cmd to select multiple</div>
+      </div>
+
+      <!-- Status -->
+      <div class="mb-3">
+        <label class="form-label">Status</label>
+        <select class="form-select" id="status">
+          <option value="draft">Draft</option>
+          <option value="published">Published</option>
+          <option value="archived">Archived</option>
+        </select>
+      </div>
+
+      <!-- Images -->
+      <div class="mb-3">
+        <label class="form-label">Image URLs</label>
+        <input type="text" class="form-control" id="images"
+          placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg" />
+        <div class="form-text">Separate URLs with commas</div>
+      </div>
+
+      <div class="d-flex gap-2">
+        <button class="btn btn-primary" type="submit" id="submitBtn">
+          <span id="submitText">Update Post</span>
+          <span id="submitSpinner" class="spinner-border spinner-border-sm d-none" role="status"></span>
+        </button>
+        <button class="btn btn-outline-secondary" type="button" onclick="goBack()">Cancel</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const postId = params.get("id");
+    const API_BASE_URL = "http://localhost:8000";
+    axios.defaults.withCredentials = true;
+
+    async function checkAuth() {
+      try {
+        const response = await axios.get(`${API_BASE_URL}/auth/check/`);
+
+        if (response.data.isAuthenticated) {
+          return response.data.user;
+        }
+      } catch (error) {
+        console.log("Chenck your Function Properly");
+      }
+    }
+
+    if (!postId) {
+      alert("Invalid post ID");
+      window.location.href = "/blogs.html";
+    }
+
+    function goBack() {
+      window.location.href = `/post?id=${postId}`;
+    }
+
+    function showLoading(show) {
+      document.getElementById('loadingOverlay').classList.toggle('active', show);
+    }
+
+    function showError(message) {
+      const errorAlert = document.getElementById('errorAlert');
+      errorAlert.textContent = message;
+      errorAlert.classList.remove('d-none');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function hideError() {
+      document.getElementById('errorAlert').classList.add('d-none');
+    }
+
+    function setSubmitLoading(loading) {
+      const submitBtn = document.getElementById('submitBtn');
+      const submitText = document.getElementById('submitText');
+      const submitSpinner = document.getElementById('submitSpinner');
+
+      submitBtn.disabled = loading;
+      submitText.classList.toggle('d-none', loading);
+      submitSpinner.classList.toggle('d-none', !loading);
+    }
+
+    // Load categories for multi-select
+    async function loadCategories() {
+      try {
+        const res = await axios.get(`${API_BASE_URL}/category/getAll`);
+        const categoriesSelect = document.getElementById("categories");
+        categoriesSelect.innerHTML = ''; // Clear existing options
+
+        res.data.data.forEach((cat) => {
+          const option = document.createElement("option");
+          option.value = cat._id;
+          option.textContent = cat.name;
+          categoriesSelect.appendChild(option);
+        });
+      } catch (error) {
+        console.error('Error loading categories:', error);
+        showError('Failed to load categories');
+      }
+    }
+
+    async function loadPost() {
+      try {
+        showLoading(true);
+        const res = await axios.get(`${API_BASE_URL}/blog/getById/${postId}`);
+        const post = res.data.data;
+
+        document.getElementById("title").value = post.title || '';
+        document.getElementById("content").value = post.content || '';
+        document.getElementById("tags").value = post.tags?.join(", ") || "";
+        document.getElementById("status").value = post.status || 'draft';
+
+        // Handle images - support both object and string formats
+        const imageUrls = post.images?.map((img) =>
+          typeof img === 'string' ? img : img.url
+        ).filter(Boolean).join(", ") || '';
+        document.getElementById("images").value = imageUrls;
+
+        // Set selected categories
+        const categoriesSelect = document.getElementById("categories");
+        if (post.categories && post.categories.length > 0) {
+          post.categories.forEach((cat) => {
+            // Handle both populated and non-populated categories
+            const catId = typeof cat === 'string' ? cat : cat._id;
+            const option = categoriesSelect.querySelector(`option[value='${catId}']`);
+            if (option) option.selected = true;
+          });
+        }
+        return post;
+      } catch (error) {
+        console.error('Error loading post:', error);
+        if (error.response?.status === 404) {
+          alert('Post not found');
+          window.location.href = "/blogs.html";
+        } else {
+          showError('Failed to load post data');
+        }
+      } finally {
+        showLoading(false);
+      }
+    }
+
+    // Handle form submission
+    document.getElementById("editPostForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      hideError();
+      setSubmitLoading(true);
+
+      const payload = {
+        title: document.getElementById("title").value.trim(),
+        content: document.getElementById("content").value.trim(),
+        tags: document
+          .getElementById("tags")
+          .value.split(",")
+          .map((t) => t.trim())
+          .filter(Boolean),
+        status: document.getElementById("status").value,
+        categories: Array.from(
+          document.getElementById("categories").selectedOptions
+        ).map((o) => o.value),
+        images: document
+          .getElementById("images")
+          .value.split(",")
+          .map((url) => ({ url: url.trim() }))
+          .filter((img) => img.url),
+      };
+
+      try {
+        // const token = localStorage.getItem("token");
+
+        // if (!token) {
+        //   showError('Please log in to update posts');
+        //   setTimeout(() => {
+        //     window.location.href = "/login.html";
+        //   }, 2000);
+        //   return;
+        // }
+
+        await axios.put(`${API_BASE_URL}/blog/update/${postId}`, payload, {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+        });
+
+        alert("Post updated successfully!");
+        window.location.href = `/post?id=${postId}`;
+      } catch (error) {
+        console.error('Update error:', error);
+
+        if (error.response?.status === 401) {
+          showError('Session expired. Please log in again.');
+          setTimeout(() => {
+            window.location.href = "/login.html";
+          }, 2000);
+        } else if (error.response?.status === 403) {
+          showError('You are not authorized to update this post');
+        } else if (error.response?.status === 404) {
+          showError('Post not found');
+        } else {
+          showError(error.response?.data?.message || 'Failed to update post. Please try again.');
+          console.log(error)
+        }
+      } finally {
+        setSubmitLoading(false);
+      }
+    });
+    loadCategories().then(loadPost);
+
+    async function renderPage(){
+      const user = await checkAuth();
+      const post = await loadPost();
+
+      console.log(user)
+
+      console.log(user)
+
+      // || or operator
+      // && and operator
+
+      console.log(user.email !== post.author.email ? "NOT OWNER" : "OWNER")
+
+      if (user.isAdmin) return
+      else if (user.isAdmin || user.email !== post.author.email) {
+        window.location.href = "/error"
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      renderPage()
+    });
+  </script>
+</body>
+</html>

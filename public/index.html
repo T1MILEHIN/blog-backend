@@ -1,0 +1,826 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Home page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+<style>
+        :root {
+        --primary-color: #2563eb;
+        --secondary-color: #64748b;
+        --accent-color: #0ea5e9;
+        --bg-light: #f8fafc;
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+        background-color: var(--bg-light);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .navbar {
+        background: white !important;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .navbar-brand {
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: var(--primary-color) !important;
+    }
+
+    .alert-fixed {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        min-width: 300px;
+        animation: slideIn 0.3s ease-out;
+        box-shadow: var(--shadow-lg);
+    }
+    .product {
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 5px;
+    }
+
+    .form-group {
+        margin: 10px 0;
+    }
+
+    input {
+        padding: 8px;
+        width: 200px;
+        margin-left: 10px;
+    }
+
+    button {
+        padding: 10px 20px;
+        margin: 5px;
+        cursor: pointer;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+    }
+
+    button:hover {
+        background: #0056b3;
+    }
+
+    #message {
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+    }
+
+    .success {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .error {
+        background: #f8d7da;
+        color: #721c24;
+    }
+
+    .image-preview {
+        max-width: 100%;
+        max-height: 200px;
+        margin-top: 10px;
+        display: none;
+    }
+
+    .image-preview.show {
+        display: block;
+    }
+
+    .tag-input-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        padding: 8px;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        min-height: 38px;
+    }
+
+    .tag-badge {
+        background-color: #0d6efd;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .tag-badge button {
+        background: none;
+        border: none;
+        color: white;
+        cursor: pointer;
+        padding: 0;
+        font-size: 18px;
+        line-height: 1;
+    }
+
+    .error-message {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 4px;
+    }
+
+    .alert-fixed {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        min-width: 300px;
+        animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    .blog-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+        height: 100%;
+    }
+
+    .blog-card:hover {
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .blog-card-img {
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .blog-card-body {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .blog-card-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .blog-card-content {
+        flex-grow: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+    }
+
+    .blog-meta {
+        font-size: 0.875rem;
+        color: #6c757d;
+    }
+
+    .category-badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        margin-right: 0.25rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .tag-chip {
+        display: inline-block;
+        background-color: #e9ecef;
+        padding: 0.25rem 0.5rem;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        margin-right: 0.25rem;
+        margin-bottom: 0.25rem;
+    }
+</style>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">BANTER</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">About</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Dropdown
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Action</a></li>
+                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+                    </li>
+                </ul>
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+                <div id="auth-buttons" class="d-flex gap-2">
+                    <a href="/login" class="btn btn-primary" type="submit">Login</a>
+                    <a href="/register" class="btn btn-success" type="submit">Sign-up</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div id="alertContainer"></div>
+
+
+    <div class="container mt-4">
+        <div class="d-flex align-items-center justify-content-between">
+            <h1>Welcome to the Home Page <span class="user-name"></span></h1>
+            <p>search:</p>
+        </div>
+        <p>This is a simple home page using Bootstrap for styling.</p>
+
+        <button class="btn btn-primary btn-sm mb-4" data-bs-toggle="modal" data-bs-target="#createPostModal">
+            Create a post
+        </button>
+
+        <!-- Loading Spinner -->
+        <div id="blogLoader" class="text-center my-5 d-none">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Loading blog posts...</p>
+        </div>
+
+        <!-- Blog Categories -->
+
+        <!-- Blog Posts Container -->
+        <div id="blogPostsContainer" class="row">
+            <!-- Blog posts will be loaded here -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="text-center my-5 d-none">
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-file-earmark-text text-muted mb-3" viewBox="0 0 16 16">
+                <path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z"/>
+                <path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5L9.5 0zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z"/>
+            </svg>
+            <h4 class="text-muted">No blog posts yet</h4>
+            <p class="text-muted">Be the first to create a blog post!</p>
+        </div>
+    </div>
+
+    <div class="modal fade" id="createPostModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="createPostModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createPostModalLabel">Create Blog Post</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="createPostForm" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <!-- Title -->
+                        <div class="mb-3">
+                            <label for="postTitle" class="form-label">Title <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="postTitle" name="title" required maxlength="200">
+                            <div class="error-message" id="titleError"></div>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="mb-3">
+                            <label for="postContent" class="form-label">Content <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="postContent" name="content" rows="6" required></textarea>
+                            <div class="error-message" id="contentError"></div>
+                        </div>
+
+                        <!-- Images -->
+                        <div class="mb-3">
+                            <label for="postImages" class="form-label">Images (Multiple)</label>
+                            <input type="file" class="form-control" id="postImages" name="images" multiple accept="image/*">
+                            <small class="text-muted">You can select multiple images (max 5MB each)</small>
+                            <div id="imagePreviewContainer" class="mt-2"></div>
+                            <div class="error-message" id="imagesError"></div>
+                        </div>
+
+                        <!-- Categories -->
+                        <div class="mb-3">
+                            <label for="postCategories" class="form-label">Categories</label>
+                            <select class="form-select" id="postCategories" name="categories" multiple>
+                                <!-- Categories will be loaded dynamically -->
+                            </select>
+                            <small class="text-muted">Hold Ctrl/Cmd to select multiple categories</small>
+                            <div class="error-message" id="categoriesError"></div>
+                        </div>
+
+                        <!-- Tags -->
+                        <div class="mb-3">
+                            <label for="postTags" class="form-label">Tags</label>
+                            <div class="tag-input-container" id="tagContainer"></div>
+                            <input type="text" class="form-control mt-2" id="tagInput" placeholder="Type a tag and press Enter">
+                            <small class="text-muted">Press Enter to add tags</small>
+                        </div>
+
+                        <!-- Status -->
+                        <div class="mb-3">
+                            <label for="postStatus" class="form-label">Status</label>
+                            <select class="form-select" id="postStatus" name="status">
+                                <option value="draft">Draft</option>
+                                <option value="published">Published</option>
+                                <option value="archived">Archived</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" id="submitBtn">
+                            <span class="spinner-border spinner-border-sm d-none" id="submitSpinner"></span>
+                            Create Post
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+        // Configuration
+        const API_BASE_URL = 'http://localhost:8000';
+        const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+        let tags = [];
+
+        // Axios default config
+        axios.defaults.withCredentials = true;
+
+        // Utility Functions
+        function showAlert(message, type = 'success') {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertId = 'alert-' + Date.now();
+            
+            const alertHTML = `
+                <div id="${alertId}" class="alert alert-${type} alert-dismissible fade show alert-fixed" role="alert">
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            `;
+            
+            alertContainer.insertAdjacentHTML('beforeend', alertHTML);
+            
+            setTimeout(() => {
+                const alert = document.getElementById(alertId);
+                if (alert) {
+                    const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+                    bsAlert.close();
+                }
+            }, 5000);
+        }
+
+        function showError(fieldId, message) {
+            const errorElement = document.getElementById(`${fieldId}Error`);
+            if (errorElement) {
+                errorElement.textContent = message;
+            }
+        }
+
+        function clearErrors() {
+            document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+        }
+
+        function validateFileSize(files) {
+            for (let file of files) {
+                if (file.size > MAX_FILE_SIZE) {
+                    showError('images', `File ${file.name} is too large. Max size is 5MB`);
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        async function checkAuth() {
+            try {
+                const response = await axios.get(`${API_BASE_URL}/auth/check/`);
+
+                if (response.data.isAuthenticated) {
+                    document.querySelector("#auth-buttons").innerHTML = `
+                        <button class="btn btn-danger ml-2" onclick="logoutUser()">Logout</button>
+                    `;
+                }
+                return response.data.user;
+            } catch (error) {
+                console.log("User not logged in");
+            }
+        }
+
+        async function logoutUser() {
+            try {
+                await axios.post(`${API_BASE_URL}/auth/logout/`);
+                showAlert('Logged out successfully', 'info');
+                setTimeout(() => window.location.reload(), 1000);
+            } catch (error) {
+                showAlert('Error logging out', 'danger');
+            }
+        }
+
+        // Load Categories
+        async function loadCategories() {
+            try {
+                const response = await axios.get(`${API_BASE_URL}/category/getAll`);
+                
+                if (response.data.success) {
+                    const categorySelect = document.getElementById('postCategories');
+                    categorySelect.innerHTML = '';
+                    
+                    response.data.data.forEach(category => {
+                        const option = document.createElement('option');
+                        option.value = category._id;
+                        option.textContent = category.name;
+                        categorySelect.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading categories:', error);
+                showAlert('Failed to load categories', 'warning');
+            }
+        }
+
+        // Image Handling
+        document.getElementById('postImages').addEventListener('change', function(e) {
+            const container = document.getElementById('imagePreviewContainer');
+            container.innerHTML = '';
+            
+            const files = Array.from(e.target.files);
+            
+            if (!validateFileSize(files)) {
+                this.value = '';
+                return;
+            }
+            
+            files.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'd-inline-block position-relative m-2';
+                    wrapper.innerHTML = `
+                        <img src="${event.target.result}" class="img-thumbnail" style="max-width: 150px; max-height: 150px;">
+                        <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0" onclick="removeImage(${index})">×</button>
+                    `;
+                    container.appendChild(wrapper);
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+
+        function removeImage(index) {
+            const input = document.getElementById('postImages');
+            const dt = new DataTransfer();
+            const files = Array.from(input.files);
+            
+            files.forEach((file, i) => {
+                if (i !== index) {
+                    dt.items.add(file);
+                }
+            });
+            
+            input.files = dt.files;
+            input.dispatchEvent(new Event('change'));
+        }
+
+        // Tag Handling
+        document.getElementById('tagInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const tag = this.value.trim();
+                
+                if (tag && !tags.includes(tag)) {
+                    tags.push(tag);
+                    renderTags();
+                    this.value = '';
+                }
+            }
+        });
+
+        function renderTags() {
+            const container = document.getElementById('tagContainer');
+            container.innerHTML = '';
+            
+            tags.forEach((tag, index) => {
+                const badge = document.createElement('div');
+                badge.className = 'tag-badge';
+                badge.innerHTML = `
+                    <span>${tag}</span>
+                    <button type="button" onclick="removeTag(${index})">×</button>
+                `;
+                container.appendChild(badge);
+            });
+        }
+
+        function removeTag(index) {
+            tags.splice(index, 1);
+            renderTags();
+        }
+
+        // Form Submission
+        document.getElementById('createPostForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            clearErrors();
+            const submitBtn = document.getElementById('submitBtn');
+            const spinner = document.getElementById('submitSpinner');
+            
+            submitBtn.disabled = true;
+            spinner.classList.remove('d-none');
+            
+            try {
+                const formData = new FormData();
+                
+                formData.append('title', document.getElementById('postTitle').value);
+                formData.append('content', document.getElementById('postContent').value);
+                formData.append('status', document.getElementById('postStatus').value);
+
+                
+                const images = document.getElementById('postImages').files;
+                for (let i = 0; i < images.length; i++) {
+                    formData.append('images', images[i]);
+                }
+                
+                const categories = Array.from(document.getElementById('postCategories').selectedOptions)
+                    .map(option => option.value);
+                formData.append('categories', JSON.stringify(categories));
+                
+                formData.append('tags', JSON.stringify(tags));
+                
+                const response = await axios.post(`${API_BASE_URL}/blog/create`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+
+                console.log("response", response)
+                
+                if (response.data.success) {
+                    showAlert('Blog post created successfully!', 'success');
+                    
+                    document.getElementById('createPostForm').reset();
+                    tags = [];
+                    renderTags();
+                    document.getElementById('imagePreviewContainer').innerHTML = '';
+                    
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('createPostModal'));
+                    modal.hide();
+                    
+                    loadBlogPosts();
+                } else {
+                    showAlert(response.data.message || 'Error creating post', 'danger');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                
+                if (error.response) {
+                    // Server responded with error
+                    const message = error.response.data.message || 'Failed to create post';
+                    showAlert(message, 'danger');
+                    
+                    if (error.response.data.errors) {
+                        error.response.data.errors.forEach(err => {
+                            showAlert(err, 'danger');
+                        });
+                    }
+                } else if (error.request) {
+                    // Request made but no response
+                    showAlert('No response from server. Please check if the server is running.', 'danger');
+                } else {
+                    // Something else happened
+                    showAlert('An error occurred while creating the post', 'danger');
+                }
+            } finally {
+                submitBtn.disabled = false;
+                spinner.classList.add('d-none');
+            }
+        });
+
+        // Modal Reset
+        document.getElementById('createPostModal').addEventListener('hidden.bs.modal', function() {
+            document.getElementById('createPostForm').reset();
+            tags = [];
+            renderTags();
+            document.getElementById('imagePreviewContainer').innerHTML = '';
+            clearErrors();
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            loadCategories();
+            loadBlogPosts();
+        });
+
+        // document.getElementById("searchForm").addEventListener("submit", function (e) {
+        //     e.preventDefault();
+
+        //     const query = document.getElementById("searchInput").value.trim();
+
+        //     const url = new URL(window.location);
+        //     if (query) {
+        //         url.searchParams.set("q", query);
+        //     } else {
+        //         url.searchParams.delete("q");
+        //     }
+        //     window.history.pushState({}, "", url);
+
+        //     loadBlogPosts(query);
+        // });
+
+
+        async function loadBlogPosts(search = "") {
+            const loader = document.getElementById('blogLoader');
+            const container = document.getElementById('blogPostsContainer');
+            const emptyState = document.getElementById('emptyState');
+
+            loader.classList.remove('d-none');
+            container.innerHTML = '';
+            emptyState.classList.add('d-none');
+
+            try {
+                let url = `${API_BASE_URL}/blog/getAll`;
+
+                if (search && search.trim() !== "") {
+                    url += `?q=${encodeURIComponent(search)}`;
+                }
+
+                const response = await axios.get(url);
+
+                let user = await checkAuth();
+
+                if (response.data.success && response.data.data.length > 0) {
+                    response.data.data.forEach(post => {
+                        container.appendChild(createBlogCard(post, user));
+                    });
+                } else {
+                    emptyState.classList.remove('d-none');
+                }
+            } catch (error) {
+                console.error('Error loading blog posts:', error);
+                showAlert('Failed to load blog posts', 'danger');
+                emptyState.classList.remove('d-none');
+            } finally {
+                loader.classList.add('d-none');
+            }
+        }
+
+        // Create Blog Card
+        function createBlogCard(post, user) {
+            console.log(post)
+            const col = document.createElement('div');
+            col.className = 'col-md-6 col-lg-4 mb-4';
+
+            const formattedDate = new Date(post.publishedAt || post.createdAt).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+
+            const images = post.images && post.images.length > 0 
+                ? post.images
+                : [];
+
+            const categories = post.categories && post.categories.length > 0
+                ? post.categories.map(cat => `<span class="badge bg-primary category-badge">${cat.name}</span>`).join('')
+                : '';
+
+            const tags = post.tags && post.tags.length > 0
+                ? post.tags.map(tag => `<span class="tag-chip">${tag}</span>`).join('')
+                : '';
+
+            const authorName = post?.author?.firstname || 'Anonymous';
+            const truncatedContent = post.content.length > 150 
+                ? post.content.substring(0, 150) + '...' 
+                : post.content;
+
+            const carouselId = `carousel-${post._id}`;
+
+            const carouselItems = images.length > 0
+                ? images.map((img, index) => `
+                    <div class="carousel-item ${index === 0 ? 'active' : ''}">
+                        <img src="${img.url}" class="d-block w-100 blog-card-img" alt="${post.title}">
+                    </div>
+                `).join('')
+                : `
+                    <div class="carousel-item active">
+                        <img src="https://via.placeholder.com/400x200?text=No+Image" class="d-block w-100 blog-card-img" alt="${post.title}">
+                    </div>
+                `;
+
+            col.innerHTML = `
+                <div class="card blog-card">
+                    <div id="${carouselId}" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            ${carouselItems}
+                        </div>
+                        ${images.length > 1 ? `
+                            <button class="carousel-control-prev" type="button" data-bs-target="#${carouselId}" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#${carouselId}" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        ` : ''}
+                    </div>
+                    <div class="card-body blog-card-body">
+                        <h5 class="blog-card-title">${post.title}</h5>
+                        <div class="mb-2">
+                            ${categories}
+                        </div>
+                        <p class="blog-card-content text-muted">${truncatedContent}</p>
+                        <div class="mb-2">
+                            ${tags}
+                        </div>
+                        <div class="blog-meta mt-auto">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small>By ${authorName}</small>
+                                <small>${formattedDate}</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <button class="btn btn-sm btn-outline-primary" onclick="viewPost('${post._id}')">Read More</button>
+                        ${(user?.email === post?.author?.email || user?.isAdmin) ? (
+                            `<button class="btn btn-sm btn-outline-secondary" onclick="updatePost('${post._id}')">Update</button>
+                            <button class="btn btn-sm btn-danger" onclick="deletePost('${post._id}')">Delete</button>`
+                        ): ""}
+                    </div>
+                </div>
+            `;
+            return col;
+        }
+
+        function updatePost(ID) {
+            console.log('Update post:', ID);
+            window.location.href = `/update-post?id=${ID}`;
+        }
+
+        function deletePost(ID) {
+
+            console.log(ID)
+            if (confirm("Are you sure you want to delete this post?")) {
+                axios.delete(`http://localhost:8000/blog/delete/696751c32aebe97e0f4e00b6`)
+                    .then(response => {
+                        if (response.data.success) {
+                            showAlert('Post deleted successfully', 'success');
+                            loadBlogPosts();
+                        } else {
+                            showAlert('Failed to delete post', 'danger');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error deleting post:', error);
+                        showAlert('Error deleting post', 'danger');
+                    });
+            }
+        }
+
+
+        function viewPost(postId) {
+            console.log('Viewing post:', postId);
+            window.location.href = `/post?id=${postId}`;
+        }
+    </script>
+</body>
+</html>
