@@ -381,7 +381,7 @@
 
     <script>
         // Configuration
-        const API_BASE_URL = 'http://localhost:8000';
+        const API_BASE_URL = 'https://blog-backend-ixjj.onrender.com/' || 'http://localhost:8000';
         const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
         let tags = [];
 
@@ -797,10 +797,8 @@
         }
 
         function deletePost(ID) {
-
-            console.log(ID)
             if (confirm("Are you sure you want to delete this post?")) {
-                axios.delete(`http://localhost:8000/blog/delete/696751c32aebe97e0f4e00b6`)
+                axios.delete(`/blog/delete/${ID}`)
                     .then(response => {
                         if (response.data.success) {
                             showAlert('Post deleted successfully', 'success');

@@ -108,7 +108,7 @@
   <script>
     const params = new URLSearchParams(window.location.search);
     const postId = params.get("id");
-    const API_BASE_URL = "http://localhost:8000";
+    const API_BASE_URL = 'https://blog-backend-ixjj.onrender.com/' || "http://localhost:8000";
     axios.defaults.withCredentials = true;
 
     async function checkAuth() {

@@ -76,10 +76,11 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
     <script>
+
         
         async function checkAuth() {
             try {
-                const response = await axios.get("http://localhost:8000/auth/check/", {}, { withCredentials: true });
+                const response = await axios.get("/auth/check/", {}, { withCredentials: true });
 
                 console.log(response);
 
@@ -96,7 +97,7 @@
         checkAuth();
 
         async function logoutUser() {
-            const response = await axios.post("http://localhost:8000/auth/logout/", {}, { withCredentials: true });
+            const response = await axios.post("/auth/logout/", {}, { withCredentials: true });
             window.location.reload();
         }
         
@@ -108,7 +109,7 @@
             const name = input.value;
 
             const response = await axios.post(
-                "http://localhost:8000/category",
+                "/category",
                 { name }
             );
 
@@ -123,7 +124,7 @@
         async function addCategoryTwo(event) {
             event.preventDefault();
             const name = event.target.category.value;
-            const response = await axios.post(`http://localhost:8000/category/${name}`)
+            const response = await axios.post(`/category/${name}`)
             console.log(response);
         }
 

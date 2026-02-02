@@ -516,7 +516,7 @@
       const data = { firstname, lastname, email, password };
 
       try {
-        const response = await axios.post("http://localhost:8000/auth/register", data, { withCredentials: true });
+        const response = await axios.post("/auth/register", data, { withCredentials: true });
         
         hideSpinner();
         showAlert('Account created successfully! Redirecting to login...', 'success');
@@ -533,7 +533,7 @@
 
     async function checkAuth() {
       try {
-        const response = await axios.get("http://localhost:8000/auth/check/", { withCredentials: true });
+        const response = await axios.get("/auth/check/", { withCredentials: true });
         if (response.data.isAuthenticated) {
           window.location.href = "/";
         }

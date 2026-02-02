@@ -447,7 +447,7 @@
       const data = { email, password };
 
       try {
-        const response = await axios.post("http://localhost:8000/auth/login", data, { withCredentials: true });
+        const response = await axios.post("/auth/login", data, { withCredentials: true });
         
         if (response.status === 200) {
           showAlert('Login successful! Redirecting...', 'success');
@@ -468,7 +468,7 @@
 
     async function checkAuth() {
       try {
-        const response = await axios.get("http://localhost:8000/auth/check/", { withCredentials: true });
+        const response = await axios.get("/auth/check/", { withCredentials: true });
         if (response.data.isAuthenticated) {
           window.location.href = "/";
         }
